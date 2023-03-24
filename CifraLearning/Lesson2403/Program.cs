@@ -4,19 +4,22 @@
         
     class Program
     {
+
+        enum Types
+        {
+            None,
+            StringType,
+            NumberType
+        }
+
         static void Main(string[] args)
         {
 
-            //Вариант без методов
-
             string _userValue;
             float _value;
-            string valueType = "";
-            //0 - не определено
-            //1 - number
-            //2 - line
-
-
+            Types valueType = Types.None;
+            //const string NumberType = "number";
+            //const string StringType = "string";
 
             while (true)
             {
@@ -34,10 +37,10 @@
 
                 switch (valueType)
                 {
-                    case "number":
+                    case Types.NumberType:
                         PrintNumberInfo();
                         break;
-                    case "string":
+                    case Types.StringType:
                         PrintStringInfo();
                         break;
                 }
@@ -51,11 +54,11 @@
                 return Console.ReadLine().Replace(".", ",");
             }
 
-            string GetValueType()
+            Types GetValueType()
             {
                 bool isNumber = float.TryParse(_userValue, out _value);
 
-                return isNumber ? "nimber" : "string";
+                return isNumber ? Types.NumberType : Types.StringType;
 
 
             }
