@@ -4,7 +4,31 @@
     {
         static void Main(string[] args)
         {
-           
+            int result;
+            float result2;
+            string line1 = Console.ReadLine();
+            // string line2 = Console.ReadLine();  
+
+            Console.WriteLine(isInteger("20"));
+            if (isInteger(line1) && result > 0)
+            {
+                Console.WriteLine("Положительное число");
+            }
+            Console.WriteLine(result);
+            Console.WriteLine(isFloat("20,0"));
+            Console.WriteLine(result2);
+
+            bool isInteger(string inputValue)
+            {
+                //result = 0;
+                return (int.TryParse(inputValue, out result));
+            }
+
+            bool isFloat(string inputValue)
+            {
+                result2 = 0;
+                return (float.TryParse(inputValue, out result2));
+            }
         }
     }
 
