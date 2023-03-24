@@ -20,13 +20,11 @@
 
             bool isInteger(string inputValue)
             {
-                //result = 0;
                 return (int.TryParse(inputValue, out result));
             }
 
             bool isFloat(string inputValue)
             {
-                result2 = 0;
                 return (float.TryParse(inputValue, out result2));
             }
         }
