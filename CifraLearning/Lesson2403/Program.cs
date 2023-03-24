@@ -9,7 +9,8 @@
         {
             None,
             StringType,
-            NumberType
+            NumberType,
+            MixType
         }
 
         static void Main(string[] args)
@@ -43,6 +44,7 @@
                     case Types.StringType:
                         PrintStringInfo();
                         break;
+                    
                 }
 
             
