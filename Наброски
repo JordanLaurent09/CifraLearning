@@ -1,0 +1,24 @@
+// черновик для задачи с records
+
+// сортировка
+for (int i = 0; i < students.Length - 1; i++)
+            {
+                for (int j = i + 1; j < students.Length; j++)
+                {
+                    if (students[i].marks.Average() > students[j].marks.Average())
+                    {
+                        Student temp = students[i];
+                        students[i] = students[j];
+                        students[j] = temp;
+                    }
+                }
+            }
+// выбор только студентов с положительными отметками
+
+foreach (Student item in students)
+            {
+                if (!item.marks.Contains(2) && !item.marks.Contains(3))
+                {
+                    Console.WriteLine(item.name + " " + item.group + " " + item.marks.Average());
+                }
+            }
