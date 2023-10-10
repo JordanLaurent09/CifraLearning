@@ -19,6 +19,6 @@ foreach (Student item in students)
             {
                 if (!item.marks.Contains(2) && !item.marks.Contains(3))
                 {
-                    Console.WriteLine(item.name + " " + item.group + " " + item.marks.Average());
+                    Console.WriteLine(item.name + " " + item.group);
                 }
             }
