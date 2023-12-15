@@ -61,8 +61,24 @@ public static void FormWaybill(List<Product> data)
                 }
             }                                
         }
-
         public static void WriteWaybill(List<Product> temp)
         {
 
         }
+
+
+
+// db code
+
+using(var context = new ApplicationContext())
+            {
+                var student1 = new Student { Name = "Ivan", Surname = "Ivanov", Age = 20 };
+                var student2 = new Student { Name = "Maria", Surname = "Smirnova", Age = 21 };
+
+                context.Students.Add(student1);
+                context.Students.Add(student2);
+
+                context.SaveChanges();
+
+                Console.WriteLine("Студенты успешно добавлены в базу данных");
+            }
