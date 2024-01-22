@@ -82,3 +82,257 @@ using(var context = new ApplicationContext())
 
                 Console.WriteLine("Студенты успешно добавлены в базу данных");
             }
+
+
+
+
+// Код для консольного магазина
+
+public class Client
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public decimal Balance { get; set; }
+        public decimal WastedMoney { get; set; }
+
+        public Client(string name, int age, decimal balance)
+        {
+            Name = name;
+            Age = age;
+            Balance = balance;
+            WastedMoney = 0m;
+        }
+    }
+
+
+public class CoolingSystem : Product
+    {
+        public CoolingSystem(int id, string title, decimal price) : base(id, title, price)
+        {
+        }
+
+        public override decimal GetDiscount(Client client)
+        {
+            decimal discount = 0m;
+
+            if(client.Age > 30)
+            {
+                discount += Price / 4m;
+            }
+
+            if (client.WastedMoney >= 10000m && client.WastedMoney < 50000m)
+            {
+                discount += Price / 20m;
+            }
+            else if (client.WastedMoney >= 50000m)
+            {
+                discount += Price / 10m;
+            }
+
+            return discount;
+        }
+    }
+
+
+public class Corpus : Product
+    {
+        public Corpus(int id, string title, decimal price) : base(id, title, price)
+        {
+        }
+    }
+
+
+public class PowerSupply : Product
+    {
+        public PowerSupply(int id, string title, decimal price) : base(id, title, price)
+        {
+        }
+
+        public override decimal GetDiscount(Client client)
+        {
+            decimal discount = 0m;
+
+            discount += Price / 2;
+
+            return discount;
+        }
+    }
+
+
+public class Product
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public decimal Price { get; set; }
+        
+        public Product(int id, string title, decimal price)
+        {
+            Id = id;
+            Title = title;
+            Price = price;
+        }
+
+
+        public virtual decimal GetDiscount(Client client)
+        {
+            decimal discount = 0m;
+
+            if(client.WastedMoney >= 10000m && client.WastedMoney < 50000m)
+            {
+                discount += Price / 20m;
+            }
+            else if(client.WastedMoney >= 50000m)
+            {
+                discount += Price / 10m;
+            }
+
+            return discount;
+        }
+    }
+
+
+public class Shop
+    {
+        public List<Product> Goods { get; }
+
+        public List<DateTime> Holidays { get; }
+        public Shop()
+        {
+            Goods = new List<Product>()
+            {
+                new CPU(1,"Processor", 23450m),
+                new Motherboard(2, "Motherboard", 12350m),
+                new PowerSupply(3, "PowerSupply", 5450m),
+                new Videocard(4, "Videocard", 20000m),
+                new Corpus(5, "Corpus", 11000m),
+                new CoolingSystem(6, "CoolingSystem", 15500m)
+            };
+
+            Holidays = new List<DateTime>()
+            {
+                new DateTime(DateTime.Now.Year, 1, 7),
+                new DateTime(DateTime.Now.Year, 2, 14),
+                new DateTime(DateTime.Now.Year, 3, 8),
+                new DateTime(DateTime.Now.Year, 4, 26),
+                new DateTime(DateTime.Now.Year, 5, 9),
+                new DateTime(DateTime.Now.Year, 6, 19),
+                new DateTime(DateTime.Now.Year, 7, 1),
+                new DateTime(DateTime.Now.Year, 8, 9),
+                new DateTime(DateTime.Now.Year, 10, 30),
+                new DateTime(DateTime.Now.Year, 11, 30),
+                new DateTime(DateTime.Now.Year, 12, 31)
+
+            };
+        }
+
+
+        // Запуск магазина
+        public void Start(List<Product> products)
+        {
+            Console.WriteLine("Введите имя:");
+            string name = Console.ReadLine();
+            Console.WriteLine("Введите возраст:");
+            int age = int.Parse(Console.ReadLine());
+            Console.WriteLine("Введите баланс:");
+            decimal balance = decimal.Parse(Console.ReadLine());
+
+            Client client = new Client(name, age, balance);
+
+            SpecialGift(client);
+
+            Console.WriteLine($"Hello, {client.Name}");
+
+            ProductMenu(products, client);
+        }
+
+        // Вывод информации о товарах с учетом скидок и совершение покупок
+        private void ProductMenu(List<Product> goods, Client client)
+        {
+            while (true)
+            {
+                Console.WriteLine($"Ваш текущий баланс: {client.Balance}");
+                foreach (Product item in goods)
+                {
+                    decimal salePrice = 0m;
+                    decimal sale = item.GetDiscount(client);
+                    if (item.Id != 3)
+                    {
+                        decimal holidaySale = HolidaySale(item.Price);
+                        salePrice = item.Price - sale - holidaySale;
+                    }
+                    else if(item.Id == 3)
+                    {
+                        salePrice = item.Price - sale;
+                    }
+                    Console.WriteLine($"[{item.Id}] Название товара: {item.Title} Цена товара:{salePrice}");
+                }
+
+
+                Console.WriteLine("Введите номер товара:");
+                int index = int.Parse(Console.ReadLine());
+
+                Product product = goods[index - 1];
+
+                decimal newPrice = 0m;
+                decimal discount = product.GetDiscount(client);
+                if (product.Id != 3)
+                {
+                    decimal holidaySale = HolidaySale(product.Price);
+                    newPrice = product.Price - discount - holidaySale;
+                }
+                else if (product.Id == 3)
+                {
+                    newPrice = product.Price - discount;
+                }
+                Console.WriteLine("Введите количество товара для покупки:");
+                int amount = int.Parse(Console.ReadLine());
+
+                decimal wastedValue = amount * newPrice;
+
+                client.WastedMoney += wastedValue;
+
+                client.Balance -= wastedValue;
+            }
+        }
+
+        // Скидка от магазина по выходным
+        private decimal HolidaySale(decimal price)
+        {
+            decimal discount = 0m;
+            if (Holidays.Contains(DateTime.Now.Date))
+            {
+                discount += price / 5m;
+            }
+            return discount;
+        }
+
+        // Акция по увеличению баланса
+        private void SpecialGift(Client client)
+        {
+            Random random = new Random();
+
+            int number = random.Next(1, 4);
+
+            Console.WriteLine("Попробуйте угадать число от 1 до 3");
+
+            int guessNumber = int.Parse(Console.ReadLine());
+
+            if(guessNumber == number)
+            {
+                Console.WriteLine("Ура! Ваш баланс удвоился!");
+                client.Balance *= 2;
+            }
+        }
+    }
+
+
+class Program
+    {
+        static void Main(string[] args)
+        {
+            Shop shop = new Shop();
+            shop.Start(shop.Goods);   
+        }
+    }
+
+
