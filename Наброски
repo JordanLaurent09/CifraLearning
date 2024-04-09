@@ -1,3 +1,45 @@
+// черновик для запроса к серверу
+public class HttpWork
+    {
+        private const string data_url = @"https://raw.githubusercontent.com/JordanLaurent09/CifraLearning/main/Movies.csv";
+
+        public static async Task<Stream> GetDataStream()
+        {
+            // Создается клиент
+            var client = new HttpClient();
+            var response = await client.GetAsync(data_url, HttpCompletionOption.ResponseHeadersRead); // возвращается только заголовок ответа,
+            //а пока еще не его тело 
+            return await response.Content.ReadAsStreamAsync();
+        }
+    }
+
+static void Main(string[] args)
+        {
+            var dataStream = HttpWork.GetDataStream().Result;
+
+            var dataReader = new StreamReader(dataStream);
+
+
+            CsvConfiguration csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
+
+            CsvReader reader = new CsvReader(dataReader, csvConfig);
+
+            List<Movie> movies = reader.GetRecords<Movie>().ToList();
+
+            dataReader.Close();
+
+
+            foreach(Movie item in movies)
+            {
+                Console.WriteLine($"{item.Id} {item.Name} {item.Year} {item.Director} {item.Genre} {item.Graduate}");
+            }
+
+        }
+
+
+
+
+
 // черновик для задачи с records
 
 // сортировка
